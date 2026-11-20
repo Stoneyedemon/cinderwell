@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c0a09" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="description" content="Cinderwell is a portrait falling-shard puzzle. Clear lines in a basalt shaft." />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Cinderwell" />
+  <title>Cinderwell</title>
+  <link rel="icon" href="./favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <style>html,body{background:#0c0a09}</style>
+  <script type="module" crossorigin src="./assets/index-BiGgnDqZ.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CzAoitQM.css">
+</head>
+<body>
+  <div id="app" data-status="title">
+    <header class="top">
+      <div class="brand-row">
+        <div>
+          <p class="eyebrow">Basalt shaft</p>
+          <h1>Cinderwell</h1>
+        </div>
+        <div class="icon-buttons">
+          <button id="mute" class="icon-btn" type="button" aria-label="Mute sound" aria-pressed="false">
+            <svg class="icon-on" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path fill="currentColor" d="M4 9.5h3.2L12 5.2v13.6l-4.8-4.3H4z"/>
+              <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M15.5 9.2a3.6 3.6 0 010 5.6M17.8 7a6.4 6.4 0 010 10"/>
+            </svg>
+            <svg class="icon-off" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path fill="currentColor" d="M4 9.5h3.2L12 5.2v13.6l-4.8-4.3H4z"/>
+              <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M16 9.5l5 5M21 9.5l-5 5"/>
+            </svg>
+          </button>
+          <button id="pause" class="icon-btn" type="button" aria-label="Pause" disabled>
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <path fill="currentColor" d="M7 4.5h3.2v15H7zM13.8 4.5H17v15h-3.2z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <dl class="stats">
+        <div><dt>Score</dt><dd id="score">0</dd></div>
+        <div><dt>Best</dt><dd id="best">0</dd></div>
+        <div><dt>Level</dt><dd id="level">1</dd></div>
+        <div><dt>Lines</dt><dd id="lines">0</dd></div>
+      </dl>
+    </header>
+
+    <div id="stage" class="stage">
+      <aside class="side hold-side">
+        <h2>Hold</h2>
+        <canvas id="hold" width="64" height="64" aria-hidden="true"></canvas>
+      </aside>
+      <div id="well" class="well">
+        <canvas id="board" width="100" height="200" aria-hidden="true"></canvas>
+        <p id="popup" class="popup" aria-live="polite"></p>
+      </div>
+      <aside class="side next-side">
+        <h2>Next</h2>
+        <canvas id="next" width="64" height="180" aria-hidden="true"></canvas>
+      </aside>
+    </div>
+
+    <div id="controls" class="controls">
+      <button type="button" data-act="ccw" aria-label="Turn counter-clockwise">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8.2 8.2V4.8H4.8" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8.2 7.2a6.4 6.4 0 11-1.6 4.6" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/>
+        </svg>
+        <span class="sub">Turn</span>
+      </button>
+      <button type="button" data-act="hold" aria-label="Hold shard">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="4" y="7" width="6.5" height="10" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+          <rect x="13.5" y="7" width="6.5" height="10" rx="1.4" fill="currentColor"/>
+        </svg>
+        <span class="sub">Hold</span>
+      </button>
+      <button type="button" data-act="cw" aria-label="Turn clockwise">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15.8 8.2V4.8H19.2" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M15.8 7.2a6.4 6.4 0 11 1.6 4.6" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/>
+        </svg>
+        <span class="sub">Turn</span>
+      </button>
+      <button type="button" data-act="left" aria-label="Move left">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M14.5 5 L7 12 L14.5 19" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button type="button" data-act="down" aria-label="Soft drop">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 9.5 L12 16.5 L19 9.5" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button type="button" data-act="right" aria-label="Move right">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9.5 5 L17 12 L9.5 19" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button type="button" class="wide" data-act="hard" aria-label="Hard drop">
+        Drop
+      </button>
+    </div>
+
+    <div id="overlay" class="overlay">
+      <section id="screen-title" class="card">
+        <p class="eyebrow">A shaft puzzle</p>
+        <h2>Cinderwell</h2>
+        <p class="lede">Glass and ember fall down a basalt well. Fill a line and the shaft swallows it.</p>
+        <p class="best-line">Best <strong id="title-best">0</strong></p>
+        <button id="btn-play" class="primary" type="button">Descend</button>
+        <ul class="hints">
+          <li>Swipe the well to shift. Tap it to turn. Flick down to drop.</li>
+          <li>Hold a move button and it keeps walking.</li>
+          <li>Keys: arrows move, Z and X turn, C holds, space drops, P pauses, M mutes.</li>
+        </ul>
+      </section>
+      <section id="screen-pause" class="card" hidden>
+        <p class="eyebrow">Paused</p>
+        <h2>Still</h2>
+        <p class="lede">The well holds its breath.</p>
+        <button id="btn-resume" class="primary" type="button">Resume</button>
+        <button id="btn-restart" class="secondary" type="button">Start over</button>
+        <button id="btn-title" class="ghost" type="button">Title</button>
+      </section>
+      <section id="screen-over" class="card" hidden>
+        <p class="eyebrow">Sealed</p>
+        <h2>Buried</h2>
+        <p class="lede">The shaft is full.</p>
+        <p class="score-lg" id="over-score">0</p>
+        <p class="best-line">Best <strong id="over-best">0</strong></p>
+        <p class="record" id="over-note" hidden>New record</p>
+        <button id="btn-again" class="primary" type="button">Descend again</button>
+        <button id="btn-title-over" class="ghost" type="button">Title</button>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
